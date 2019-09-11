@@ -21,24 +21,37 @@ class Board extends React.Component {
   }
 
   render() {
+    const rows = Array(3);
+    for (let i = 0; i < rows.length; i++) {
+      let cells = [];
+      for (let j = 0; j < rows.length; j++) {
+        cells.push(this.renderSquare(rows.length * i + j));
+      }
+      rows[i] = (
+        <div className="board-row" key={i}>
+          {cells}
+        </div>
+      );
+    }
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
+      <div>{rows}</div>
+      //   <div>
+      //     <div className="board-row">
+      //       {this.renderSquare(0)}
+      //       {this.renderSquare(1)}
+      //       {this.renderSquare(2)}
+      //     </div>
+      //     <div className="board-row">
+      //       {this.renderSquare(3)}
+      //       {this.renderSquare(4)}
+      //       {this.renderSquare(5)}
+      //     </div>
+      //     <div className="board-row">
+      //       {this.renderSquare(6)}
+      //       {this.renderSquare(7)}
+      //       {this.renderSquare(8)}
+      //     </div>
+      //   </div>
     );
   }
 }
@@ -80,15 +93,23 @@ class Game extends React.Component {
   }
 
   render() {
+    const stepNumber = this.state.stepNumber;
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? "Go to move # " + move + ' ' + calculateSquarePosition(step.current) : "Go to game start";
+      const desc = move
+        ? "Go to move # " + move + " " + calculateSquarePosition(step.current)
+        : "Go to game start";
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button
+            className={move === stepNumber ? "selected" : ""}
+            onClick={() => this.jumpTo(move)}
+          >
+            {desc}
+          </button>
         </li>
       );
     });
@@ -138,10 +159,10 @@ function calculateWinner(squares) {
   return null;
 }
 
-function calculateSquarePosition(currentSquare){
-    // gets the remainder after devision - finds column - works with 3x3 change to 4 for 4x4
-    const col = currentSquare % 3;
-    // gets the largest integer less than or equal to a number
-    const row = Math.floor(currentSquare / 3);
-    return `(${col}, ${row})`;
+function calculateSquarePosition(currentSquare) {
+  // gets the remainder after devision - finds column - works with 3x3 change to 4 for 4x4
+  const col = currentSquare % 3;
+  // gets the largest integer less than or equal to a number
+  const row = Math.floor(currentSquare / 3);
+  return `(${col}, ${row})`;
 }
