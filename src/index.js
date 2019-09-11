@@ -53,8 +53,7 @@ class Game extends React.Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true,
-      
+      xIsNext: true
     };
   }
 
@@ -67,7 +66,7 @@ class Game extends React.Component {
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
-      history: history.concat([{ squares: squares }]),
+      history: history.concat([{ squares: squares, current: i }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
@@ -86,7 +85,7 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? "Go to move # " + move : "Go to game start";
+      const desc = move ? "Go to move # " + move + ' ' + calculateSquarePosition(step.current) : "Go to game start";
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -137,4 +136,12 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function calculateSquarePosition(currentSquare){
+    // gets the remainder after devision - finds column - works with 3x3 change to 4 for 4x4
+    const col = currentSquare % 3;
+    // gets the largest integer less than or equal to a number
+    const row = Math.floor(currentSquare / 3);
+    return `(${col}, ${row})`;
 }
